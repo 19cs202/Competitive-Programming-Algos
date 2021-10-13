@@ -1,0 +1,84 @@
+#include<stdio.h>
+struct sjf{
+	int bt,wt,tt,pid;
+};
+struct sjf data[20];
+void sort(int i,int j)
+{
+	struct sjf temp;
+	temp = data[i];
+	data[i] = data[j];
+	data[j] = temp;
+}	
+void main()
+{
+	int i,j,n;
+	float avgwt=0,avgtt=0;
+	printf("Enter the number of processes : ");
+	scanf("%d",&n);
+	printf("\n");
+	for(i=0;i<n;i++)
+	{
+		printf("Enter burst time of P%d: ",i+1);
+		scanf("%d",&data[i].bt);
+		data[i].pid=i+1;
+	}
+	printf("\n");
+	for(i=0;i<n-1;i++)
+		for(j=0;j<n-i-1;j++)
+			if(data[j].bt>data[j+1].bt)
+			sort(j,j+1);
+	data[0].wt = 0;
+	data[0].tt = data[0].bt;
+	avgtt = data[0].bt;
+	for(i=1;i<n;i++)
+		{
+				data[i].wt = data[i-1].tt;
+			        data[i].tt = data[i].wt + data[i].bt;
+				avgwt += data[i].wt;
+				avgtt += data[i].tt;
+							}
+	avgwt = avgwt/n;
+	avgtt = avgtt/n;
+	printf("Process\t| Burst Time\t| Waiting Time\t| Turnaround Time\n");
+	printf("-----------------------------------------------------------\n");
+	for(i=0;i<n;i++)
+		
+			printf("  P%d\t| %d\t\t| %d\t\t| %d\n",data[i].pid,data[i].bt,data[i].wt,data[i].tt);
+	
+	printf("Average waiting time = %0.1f\nAverage turnaround time = %0.1f\n",avgwt,avgtt);
+	printf("\n\tGANT CHART\n");
+	printf(" ");
+	for(i=0;i<n;i++)
+	{
+		for(j=0; j<data[i].bt; j++)
+			printf("--");
+		printf(" ");
+	}
+	printf("\n|");
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<data[i].bt/2;j++)
+			printf("  ");
+		printf("P%d",data[i].pid);
+		for(j=(data[i].bt/2);j<data[i].bt-1;j++)
+			printf("  ");
+		printf("|");
+	}
+	printf("\n ");
+	for(i=0;i<n;i++)
+	{	for(j=0;j<data[i].bt;j++)
+			printf("--");
+		printf(" ");
+	}
+	printf("\n0");
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<data[i].bt;j++)
+			printf("  ");
+		if(data[i].tt>9)
+			printf("\b");
+					
+		printf("%d",data[i].tt);												}															printf("\n");
+															
+}
