@@ -1,0 +1,140 @@
+#include<stdio.h>
+
+struct Block{
+	int p_num;
+	int size;
+}block[10];
+
+int b_alloc[10]={0};
+void init(int nob){
+	for(int i=0;i<nob;i++){
+		b_alloc[i]=0;
+		block[i].p_num=0;
+	}
+}
+void first_fit(int p[],int nop,int nob){
+	for(int i=0;i<nop;i++){
+			for(int j=0;j<nob;j++){
+				if(block[j].size>=p[i] && b_alloc[j]==0){
+						block[j].p_num=i+1;
+						b_alloc[j]=1;
+						break;
+					}
+			}
+	}
+}
+
+void best_fit(int p[],int nop,int nob){
+    int min_size,min_b=0;
+
+	for(int i=0;i<nop;i++){
+		min_size=2147483647;
+		for(int j=0;j<nob;j++){
+			if(block[j].size>p[i] && block[j].size<min_size && b_alloc[j]==0){
+				min_size=block[j].size;
+				min_b=j;
+			}
+		}
+
+		if(b_alloc[min_b]==0){
+			block[min_b].p_num=i+1;
+			b_alloc[min_b]=1;
+		}
+	}
+}
+
+void worst_fit(int p[],int nop,int nob){
+    int max_size,max_b=0;
+
+	for(int i=0;i<nop;i++){
+		max_size=0;
+		for(int j=0;j<nob;j++){
+			if(block[j].size>p[i] && block[j].size>max_size && b_alloc[j]==0){
+				max_size=block[j].size;
+				max_b=j; //max index
+			}
+		}
+		if(b_alloc[max_b]==0){
+			block[max_b].p_num=i+1;
+			b_alloc[max_b]=1;
+		}
+	}
+}
+
+void result(int nob){
+	for(int i=0;i<nob;i++)
+	 printf("%d\t",block[i].size);
+
+	printf("\n");
+	for(int i=0;i<nob;i++)
+	 printf("--------");
+	printf("-");
+
+	printf("\n");
+	for(int i=0;i<nob;i++){
+	 if(block[i].p_num==0)
+	 		 printf("|\t");
+	 	else printf("|P%d\t",block[i].p_num);
+	}
+	printf("|");
+
+
+
+	printf("\n");
+	for(int i=0;i<nob;i++)
+	 printf("--------");
+	printf("-");
+
+}
+int main(){
+
+	int nob,nop,p[10];
+	int choice;
+
+	printf("\nEnter the no.of blocks : ");
+	scanf("%d",&nob);
+
+	printf("\nEnter the size of each block : ");
+	for(int i=0;i<nob;i++){
+		scanf("%d",&block[i].size);
+
+	}
+
+	printf("\nEnter the no.of processes : ");
+	scanf("%d",&nop);
+
+	printf("\nEnter the size of each process : ");
+	for(int i=0;i<nop;i++)
+		scanf("%d",&p[i]);
+
+	printf("\nMENU");
+	printf("\n----\n");
+	printf("1.FIRST FIT\n2.BEST FIT\n3.WORST FIT\n4.EXIT");
+
+	while(1){
+		printf("\nEnter your choice : ");
+		scanf("%d",&choice);
+
+		switch(choice){
+
+			case 1:first_fit(p,nop,nob);
+				   result(nob);
+				   init(nob);
+				   break;
+
+			case 2:best_fit(p,nop,nob);
+				   result(nob);
+				   init(nob);
+				   break;
+
+			case 3:worst_fit(p,nop,nob);
+				   result(nob);
+				   init(nob);
+				   break;
+			case 4 :printf("\nf*** U SOON!\n");
+					return 0;
+			default:printf("Wrong choice!");
+		}
+	}
+
+}
